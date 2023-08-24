@@ -1,11 +1,22 @@
-import type { V2_MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import MapRender from "~/components/MapRender";
-import React, { useEffect, useRef } from "react";
+import React, { createRef, useEffect, useRef } from "react";
 import MapLoading from "~/components/MapLoading";
 import TileWindow from "~/components/TileWindow";
 import Login from "~/components/Login";
 import Register from "~/components/Register";
-import { Button, Drawer, Space } from "antd";
+import { Alert, Button, Drawer, Popconfirm, Space } from "antd";
+import { useLoaderData } from "@remix-run/react";
+import Tour from "~/components/Tour";
+import About from "~/components/About";
+
+export const loader: LoaderFunction = () => {
+  return {
+    commitMessage: process.env.VERCEL_GIT_COMMIT_MESSAGE,
+    commitSha: process.env.VERCEL_GIT_COMMIT_SHA,
+    commitBranch: process.env.VERCEL_GIT_COMMIT_REF,
+  };
+};
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -29,6 +40,8 @@ for (let i = 0; i < 100; i++) {
 }
 
 export default function Index() {
+  const data = useLoaderData();
+
   const [map, setMap] = React.useState(
     [] as { colour: string; user: string }[][]
   );
@@ -36,10 +49,19 @@ export default function Index() {
   const [showRegister, setShowRegister] = React.useState(false);
   const [showUserActions, setShowUserActions] = React.useState(false);
 
+  const [logoutAllConfirm, setLogoutAllConfirm] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [loggedInUsername, setLoggedInUsername] = React.useState("");
 
-  const [logoutLoading, setLogoutLoading] = React.useState(false);
+  const [accountDeleteConfirm, setAccountDeleteConfirm] = React.useState(false);
+  const [accountDeleteError, setAccountDeleteError] = React.useState("");
+
+  const [about, setAbout] = React.useState(false);
+
+  const [tour, setTour] = React.useState(false);
+
+  const menuButtonRef = useRef(null);
+  const logoutButtonRef = useRef(null);
 
   const refreshMap = () => {
     fetch("/api/getGrid")
@@ -87,19 +109,41 @@ export default function Index() {
   };
 
   const logOutAll = () => {
-    setLogoutLoading(true);
-    fetch("/api/logoutall", {
-      headers: {
-        Authorization: localStorage.getItem("token") ?? "",
-      },
-    }).then((x) => {
-      setLogoutLoading(false);
-      if (x.status === 200) {
-        localStorage.removeItem("token");
-        setLoggedIn(false);
-      }
-    });
+    return new Promise((resolve, reject) => {
+      fetch("/api/logoutall", {
+        headers: {
+          Authorization: localStorage.getItem("token") ?? "",
+        },
+      }).then((x) => {
+        resolve(null);
+        setLogoutAllConfirm(false);
+        if (x.status === 200) {
+          localStorage.removeItem("token");
+          setLoggedIn(false);
+        }
+      });
+    })
   };
+
+  const deleteAccount = () => {
+    return new Promise((resolve, reject) => {
+      fetch('/api/deleteaccount', {
+        headers: {
+          'Authorization': localStorage.getItem('token') ?? ''
+        }
+      }).then(x => x.json()).then(x => {
+        resolve(null);
+        setAccountDeleteConfirm(false);
+        if (x.success) {
+          localStorage.removeItem('token');
+          setLoggedIn(false);
+        }
+        else {
+          setAccountDeleteError(x.error);
+        }
+      })
+    })
+  }
 
   const hasRan = useRef(false);
 
@@ -124,40 +168,39 @@ export default function Index() {
         {map.length == 0 && <MapLoading />}
         {map.length == 0 || <MapRender map={map} onTileSelect={tileSelected} />}
       </div>
-      {
-        <TileWindow
-          x={tileWindow.x}
-          y={tileWindow.y}
-          map={map}
-          visible={tileWindow.visible}
-          close={() => setTileWindow({ ...tileWindow, visible: false })}
-          updateTiles={() => refreshMap()}
-        />
-      }
 
-      {
-        <Login
-          visible={showLogin}
-          logIn={refreshUser}
-          close={() => {
-            setShowLogin(false);
-            setShowUserActions(true);
-          }}
-        />
-      }
+      <TileWindow
+        x={tileWindow.x}
+        y={tileWindow.y}
+        map={map}
+        visible={tileWindow.visible}
+        close={() => setTileWindow({ ...tileWindow, visible: false })}
+        updateTiles={() => refreshMap()}
+      />
 
-      {
-        <Register
-          visible={showRegister}
-          logIn={refreshUser}
-          close={() => {
-            setShowRegister(false);
-            setShowUserActions(true);
-          }}
-        />
-      }
+      <Login
+        visible={showLogin}
+        logIn={refreshUser}
+        close={() => {
+          setShowLogin(false);
+          setShowUserActions(true);
+        }}
+      />
 
+      <Register
+        visible={showRegister}
+        logIn={refreshUser}
+        logInStartTour={() => {
+          refreshUser();
+          setTour(true);
+        }}
+        close={() => {
+          setShowRegister(false);
+          setShowUserActions(true);
+        }}
+      />
       <Button
+        ref={menuButtonRef}
         style={{
           position: "fixed",
           top: "20px",
@@ -166,7 +209,7 @@ export default function Index() {
         onClick={() => setShowUserActions(true)}
         type="primary"
       >
-        User ({loggedIn ? `logged in as ${loggedInUsername}` : "not logged in"})
+        User ({loggedIn ? <>logged in as <b>{loggedInUsername}</b></> : "not logged in"})
       </Button>
       <Drawer open={showUserActions} onClose={() => setShowUserActions(false)}>
         <Space direction="vertical">
@@ -174,10 +217,35 @@ export default function Index() {
           {loggedIn ? (
             <>
               <p>You are currently logged in as {loggedInUsername}</p>
-              <Button onClick={logOut}>Log out</Button>
-              <Button onClick={logOutAll} loading={logoutLoading}>
-                Log out all devices
+              <Button ref={logoutButtonRef} onClick={logOut}>
+                Log out
               </Button>
+              <Popconfirm 
+                title={"Really log out of all devices?"}
+                open={logoutAllConfirm}
+                onConfirm={logOutAll}
+                onCancel={() => setLogoutAllConfirm(false)}
+              >
+                <Button
+                  onClick={() => setLogoutAllConfirm(true)}
+                >
+                  Log out all devices
+                </Button>
+              </Popconfirm>
+              <Popconfirm 
+                title="Really delete account?"
+                open={accountDeleteConfirm}
+                onConfirm={deleteAccount}
+                onCancel={() => setAccountDeleteConfirm(false)}
+              >
+                <Button
+                  onClick={() => setAccountDeleteConfirm(true)}
+                >
+                  Delete account
+                </Button>
+              </Popconfirm>
+              {accountDeleteError == "" || <Alert message={accountDeleteError} type="error" />}
+              <Button onClick={() => setTour(true)}>Start tour</Button>
             </>
           ) : (
             <>
@@ -216,8 +284,34 @@ export default function Index() {
             You can also suggest new features under the art post in Zen's
             Discord (if you're there)
           </p>
+          <Button onClick={() => setAbout(true)}>
+            About Astolph0/place
+          </Button>
         </Space>
       </Drawer>
+
+      <About open={about} onClose={() => setAbout(false)} />
+
+      <Tour
+        start={tour}
+        menuButton={menuButtonRef}
+        exit={() => setTour(false)}
+        sidebarOpen={showUserActions}
+        openSidebar={() => setShowUserActions(true)}
+        closeSidebar={() => setShowUserActions(false)}
+      />
+
+      <div
+        style={{
+          position: "fixed",
+          left: "2px",
+          bottom: "2px",
+          fontSize: "12px",
+        }}
+      >
+        Astolph0/place {data.commitSha} "{data.commitMessage}" on{" "}
+        {data.commitBranch}
+      </div>
     </div>
   );
 }

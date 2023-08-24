@@ -12,6 +12,23 @@ export const loader: LoaderFunction = async ({ request }) => {
       status: 400
     })
   }
+  
+	if (username === '') {
+		return new Response(JSON.stringify({
+			error: 'Missing username'
+		}), {
+			status: 400
+		})
+	}
+
+  const regex = /^[a-zA-Z0-9_-]*$/;
+	if (!regex.test(username)) {
+		return new Response(JSON.stringify({
+			error: 'Username must only contain a-z, A-Z, 0-9, _ and -'
+		}), {
+			status: 400
+		})
+	}
 
   const users = await (await fetch(`${process.env.FIREBASE}/users.json`)).json() as {
     username: string,
