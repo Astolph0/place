@@ -28,6 +28,17 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
   }
 
+  if (!verifySuccess) {
+    return new Response(
+      JSON.stringify({
+        error: "Invalid token",
+      }),
+      {
+        status: 401,
+      }
+    );
+  }
+
   return new Response(
     JSON.stringify({
       canPlace: new Date(user.nextPlaceDate) <= new Date(),

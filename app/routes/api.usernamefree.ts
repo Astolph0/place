@@ -39,7 +39,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     nextPlaceDate: string;
   }[];
 
-  let found = false;
   for (let i of users) {
     if (i.username.toLowerCase() == username.toLowerCase()) {
       return new Response(JSON.stringify({

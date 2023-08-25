@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, Space, Tabs } from "antd";
+import { Alert, Button, ColorPicker, Modal, Space, Tabs, Typography } from "antd";
 import React, { useEffect } from "react";
 
 export default function TileWindow(props: { x: number, y: number, map: {colour: string, user: string}[][], visible: boolean, close: () => void, updateTiles: () => void }) {
@@ -8,6 +8,7 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
   const [loading, setLoading] = React.useState(false)
   const [loggedIn, setLoggedIn] = React.useState(false)
   const [tab, setTab] = React.useState('1')
+  const [showColourPreview, setShowColourPreview] = React.useState(false)
 
   useEffect(() => {
     if (!loggedIn && localStorage.getItem('token'))
@@ -22,16 +23,32 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
     colourCode = props.map[props.y][props.x].colour
     user = props.map[props.y][props.x].user
   }
-  let colour = ''
-  if (colourCode == 'b') colour = 'Blue'
-  if (colourCode == 'r') colour = 'Red'
-  if (colourCode == 'g') colour = 'Green'
-  if (colourCode == 'y') colour = 'Yellow'
-  if (colourCode == 'p') colour = 'Femboy Pink'
-  if (colourCode == 'o') colour = 'Orange'
-  if (colourCode == 'c') colour = 'Cyan'
-  if (colourCode == 'w') colour = 'White'
-  if (colourCode == '0') colour = 'Black'
+  let colour = colourCode
+  let red = 0
+  let green = 0
+  let blue = 0
+  if (colour.length == 6) {
+    colour = '#' + colour
+    red = parseInt(colour.substring(1, 2), 16)
+    green = parseInt(colour.substring(3, 5), 16)
+    blue = parseInt(colour.substring(5, 7), 16)
+    console.log('red: ' + red + ' green: ' + green + ' blue: ' + blue, 'total: ' + (red + green + blue))
+    if (!showColourPreview)
+      setShowColourPreview(true)
+  }
+  else {
+    if (showColourPreview)  
+      setShowColourPreview(false)
+    if (colour == 'b') colour = 'Blue'
+    if (colour == 'r') colour = 'Red'
+    if (colour == 'g') colour = 'Green'
+    if (colour == 'y') colour = 'Yellow'
+    if (colour == 'p') colour = 'Pink'
+    if (colour == 'o') colour = 'Orange'
+    if (colour == 'c') colour = 'Cyan'
+    if (colour == 'w') colour = 'White'
+    if (colour == '0') colour = 'Black'
+  }
 
   if (!props.visible && tab !== '1') {
     setTab('1')
@@ -95,10 +112,12 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
             label: 'Properties', 
             key: '1', 
             children: <>
-              <p>X: {props.x}</p>
-              <p>Y: {props.y}</p>
-              <p>Colour: {colour}</p>
-              <p>Placed by: {user}</p>
+              <Typography>X: {props.x}</Typography>
+              <Typography>Y: {props.y}</Typography>
+              <Typography>
+                Colour: <span style={{color: colour, backgroundColor: red + green + blue < 100 ? '#ffffff' : '#000000'}}>{colour}</span>
+              </Typography>
+              <Typography>Placed by: {user}</Typography>
             </>
           },
           {
@@ -106,19 +125,16 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
             key: '2',
             children: <>
               {loggedIn && <>
-                <p>Select new colour: </p>
-                <Space wrap>
-                  <Button style={{backgroundColor: 'red'}} onClick={() => setNewColour('r')} />
-                  <Button style={{backgroundColor: 'green'}} onClick={() => setNewColour('g')} />
-                  <Button style={{backgroundColor: 'blue'}} onClick={() => setNewColour('b')} />
-                  <Button style={{backgroundColor: 'yellow'}} onClick={() => setNewColour('y')} />
-                  <Button style={{backgroundColor: '#ffa9ff'}} onClick={() => setNewColour('p')} />
-                  <Button style={{backgroundColor: 'cyan'}} onClick={() => setNewColour('c')} />
-                  <Button style={{backgroundColor: 'orange'}} onClick={() => setNewColour('o')} />
-                  <Button style={{backgroundColor: 'white'}} onClick={() => setNewColour('w')} />
-                  <Button style={{backgroundColor: 'black'}} onClick={() => setNewColour('0')} />
-                </Space>
-                <p>Hit OK to apply</p>
+                <Typography>
+                  <Typography.Paragraph style={{fontWeight: 'bold', fontSize: '32px'}}>Select new colour </Typography.Paragraph>
+                  <Typography.Paragraph>
+                    Clicking on the colour below will open a color selector.
+                  </Typography.Paragraph>
+                  <Typography.Paragraph>
+                    You then select the new colour and apply it using OK.
+                  </Typography.Paragraph>
+                </Typography>
+                <ColorPicker size="large" value={newColour} onChange={x => setNewColour(x.toHex())} />
                 {error === '' || <Alert message={error} type="error" />}
               </>}
               {loggedIn || <>

@@ -137,7 +137,7 @@ export default function MapRender(props: {
       for (let i = 0; i < props.map.length; i++) {
         const row = props.map[i];
         for (let j = 0; j < row.length; j++) {
-          // draw row, if string is 'r', it's red, 'g' is green, 'b' is blue
+          ctx.fillStyle = `#${row[j].colour}`;
           if (row[j].colour === "r") ctx.fillStyle = "#ff0000";
           if (row[j].colour === "g") ctx.fillStyle = "#00ff00";
           if (row[j].colour === "b") ctx.fillStyle = "#0000ff";

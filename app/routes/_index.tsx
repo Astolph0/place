@@ -10,17 +10,6 @@ import { useLoaderData } from "@remix-run/react";
 import Tour from "~/components/Tour";
 import About from "~/components/About";
 
-export const loader: LoaderFunction = () => {
-  let commitSha = process.env.VERCEL_GIT_COMMIT_SHA ?? "unknown";
-  if (commitSha.length > 7) {
-    commitSha = commitSha.substring(0, 7);
-  }
-
-  return {
-    commitSha,
-  };
-};
-
 export const meta: V2_MetaFunction = () => {
   return [
     { title: "r/place clone" },
@@ -43,8 +32,6 @@ for (let i = 0; i < 100; i++) {
 }
 
 export default function Index() {
-  const data = useLoaderData();
-
   const [map, setMap] = React.useState(
     [] as { colour: string; user: string }[][]
   );
@@ -62,6 +49,8 @@ export default function Index() {
   const [about, setAbout] = React.useState(false);
 
   const [tour, setTour] = React.useState(false);
+
+  const [version, setVersion] = React.useState('');
 
   const menuButtonRef = useRef(null);
   const logoutButtonRef = useRef(null);
@@ -164,6 +153,10 @@ export default function Index() {
     ) {
       refreshUser();
     }
+
+    fetch('/api/versioninfo').then(x => x.json()).then(x => {
+      setVersion(x.commitSha);
+    })
 
     const updating = setInterval(refreshMap, 30000);
     return () => clearInterval(updating);
@@ -325,7 +318,7 @@ export default function Index() {
           color: 'white'
         }}
       >
-        Astolph0/place 1.1-{data.commitSha}
+        Astolph0/place 1.1{version == '' || `-${version}`}
       </div>
     </div>
   );

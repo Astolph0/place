@@ -3,7 +3,7 @@ import type {ActionFunction} from "@remix-run/node";
 export const action: ActionFunction = async ({request}) => {
   const body = await request.json();
   console.log(body);
-  console.log(`x=${body.x}, y=${body.y}, colour=${body.colour}`)
+  console.log(`x=${body.x}, y=${body.y}, colour=#${body.colour}`)
   console.log(!body.x, !body.y, !body.colour)
   if (!body.x || !body.y || !body.colour) {
     return new Response(JSON.stringify({
@@ -57,10 +57,13 @@ export const action: ActionFunction = async ({request}) => {
     })
   })
 
-  await fetch(`${process.env.FIREBASE}/users/${users.indexOf(user)}/nextPlaceDate.json`, {
-    method: "PUT",
-    body: JSON.stringify(new Date(Date.now() + 1000 * 60 * 5).toISOString())
-  })
+  if (user.username !== 'system' && user.username !== 'astolfo') {
+    console.log('apply cooldown for user', user.username)
+    await fetch(`${process.env.FIREBASE}/users/${users.indexOf(user)}/nextPlaceDate.json`, {
+      method: "PUT",
+      body: JSON.stringify(new Date(Date.now() + 1000 * 60 * 5).toISOString())
+    })
+  }
 
   return new Response(JSON.stringify({
     message: "Placed pixel successfully"
