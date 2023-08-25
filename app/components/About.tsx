@@ -33,7 +33,7 @@ export default function About(props: { open: boolean; onClose: () => void }) {
                   <Card title="Discord">
                     My Discord invite is here!
                     <Button
-                      type="primary"
+                      type="link"
                       onClick={() =>
                         (location.href = "https://mldkyt.com/discord")
                       }
@@ -44,7 +44,7 @@ export default function About(props: { open: boolean; onClose: () => void }) {
                   <Card title="More">
                     More social links are here:
                     <Button
-                      type="primary"
+                      type="link"
                       onClick={() =>
                         (location.href = "https://mldkyt.com/social")
                       }
