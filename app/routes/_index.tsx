@@ -12,9 +12,7 @@ import About from "~/components/About";
 
 export const loader: LoaderFunction = () => {
   return {
-    commitMessage: process.env.VERCEL_GIT_COMMIT_MESSAGE,
-    commitSha: process.env.VERCEL_GIT_COMMIT_SHA,
-    commitBranch: process.env.VERCEL_GIT_COMMIT_REF,
+    commitSha: process.env.VERCEL_GIT_COMMIT_SHA?.substring(7) ?? 'unknown'
   };
 };
 
@@ -309,8 +307,7 @@ export default function Index() {
           fontSize: "12px",
         }}
       >
-        Astolph0/place {data.commitSha} "{data.commitMessage}" on{" "}
-        {data.commitBranch}
+        Astolph0/place 1.1-{data.commitSha}
       </div>
     </div>
   );

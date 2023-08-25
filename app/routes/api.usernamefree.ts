@@ -41,7 +41,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   let found = false;
   for (let i of users) {
-    if (i.username == username) {
+    if (i.username.toLowerCase() == username.toLowerCase()) {
       return new Response(JSON.stringify({
 				error: 'Username already taken'
 			}), {

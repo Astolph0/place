@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({request}) => {
   let userIndex = 0
 
   for (let i = 0; i < users.length; i++) {
-    if (users[i].username === data.get('username') && users[i].password === data.get('password')) {
+    if (users[i].username.toLowerCase() === data.get('username')!.toLowerCase() && users[i].password === data.get('password')) {
       verifySuccess = true;
       user = users[i];
       userIndex = i;

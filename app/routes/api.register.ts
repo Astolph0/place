@@ -39,7 +39,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   let verifySuccess = false;
   for (let i of users) {
-    if (i.username == username) {
+    if (i.username.toLowerCase() == username.toLowerCase()) {
       verifySuccess = true;
     }
   }
