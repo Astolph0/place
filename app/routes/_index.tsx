@@ -11,8 +11,13 @@ import Tour from "~/components/Tour";
 import About from "~/components/About";
 
 export const loader: LoaderFunction = () => {
+  let commitSha = process.env.VERCEL_GIT_COMMIT_SHA ?? "unknown";
+  if (commitSha.length > 7) {
+    commitSha = commitSha.substring(0, 7);
+  }
+
   return {
-    commitSha: process.env.VERCEL_GIT_COMMIT_SHA?.substring(7) ?? "unknown",
+    commitSha,
   };
 };
 
