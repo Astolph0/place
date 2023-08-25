@@ -1,18 +1,18 @@
 import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import MapRender from "~/components/MapRender";
-import React, { createRef, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import MapLoading from "~/components/MapLoading";
 import TileWindow from "~/components/TileWindow";
 import Login from "~/components/Login";
 import Register from "~/components/Register";
-import { Alert, Button, Drawer, Popconfirm, Space } from "antd";
+import { Alert, Button, Drawer, Popconfirm, Space, Typography } from "antd";
 import { useLoaderData } from "@remix-run/react";
 import Tour from "~/components/Tour";
 import About from "~/components/About";
 
 export const loader: LoaderFunction = () => {
   return {
-    commitSha: process.env.VERCEL_GIT_COMMIT_SHA?.substring(7) ?? 'unknown'
+    commitSha: process.env.VERCEL_GIT_COMMIT_SHA?.substring(7) ?? "unknown",
   };
 };
 
@@ -120,28 +120,29 @@ export default function Index() {
           setLoggedIn(false);
         }
       });
-    })
+    });
   };
 
   const deleteAccount = () => {
     return new Promise((resolve, reject) => {
-      fetch('/api/deleteaccount', {
+      fetch("/api/deleteaccount", {
         headers: {
-          'Authorization': localStorage.getItem('token') ?? ''
-        }
-      }).then(x => x.json()).then(x => {
-        resolve(null);
-        setAccountDeleteConfirm(false);
-        if (x.success) {
-          localStorage.removeItem('token');
-          setLoggedIn(false);
-        }
-        else {
-          setAccountDeleteError(x.error);
-        }
+          Authorization: localStorage.getItem("token") ?? "",
+        },
       })
-    })
-  }
+        .then((x) => x.json())
+        .then((x) => {
+          resolve(null);
+          setAccountDeleteConfirm(false);
+          if (x.success) {
+            localStorage.removeItem("token");
+            setLoggedIn(false);
+          } else {
+            setAccountDeleteError(x.error);
+          }
+        });
+    });
+  };
 
   const hasRan = useRef(false);
 
@@ -158,6 +159,9 @@ export default function Index() {
     ) {
       refreshUser();
     }
+
+    const updating = setInterval(refreshMap, 30000);
+    return () => clearInterval(updating);
   }, [setMap, refreshMap]);
 
   return (
@@ -207,47 +211,55 @@ export default function Index() {
         onClick={() => setShowUserActions(true)}
         type="primary"
       >
-        User ({loggedIn ? <>logged in as <b>{loggedInUsername}</b></> : "not logged in"})
+        User (
+        {loggedIn ? (
+          <>
+            logged in as <b>{loggedInUsername}</b>
+          </>
+        ) : (
+          "not logged in"
+        )}
+        )
       </Button>
       <Drawer open={showUserActions} onClose={() => setShowUserActions(false)}>
         <Space direction="vertical">
-          <h1>Profile information</h1>
+          <Typography><Typography.Title>Profile information</Typography.Title></Typography>
           {loggedIn ? (
             <>
-              <p>You are currently logged in as {loggedInUsername}</p>
+              <Typography>
+                You are currently logged in as {loggedInUsername}
+              </Typography>
               <Button ref={logoutButtonRef} onClick={logOut}>
                 Log out
               </Button>
-              <Popconfirm 
+              <Popconfirm
                 title={"Really log out of all devices?"}
                 open={logoutAllConfirm}
                 onConfirm={logOutAll}
                 onCancel={() => setLogoutAllConfirm(false)}
               >
-                <Button
-                  onClick={() => setLogoutAllConfirm(true)}
-                >
+                <Button onClick={() => setLogoutAllConfirm(true)}>
                   Log out all devices
                 </Button>
               </Popconfirm>
-              <Popconfirm 
+              <Popconfirm
                 title="Really delete account?"
                 open={accountDeleteConfirm}
                 onConfirm={deleteAccount}
                 onCancel={() => setAccountDeleteConfirm(false)}
               >
-                <Button
-                  onClick={() => setAccountDeleteConfirm(true)}
-                >
+                <Button onClick={() => setAccountDeleteConfirm(true)}>
                   Delete account
                 </Button>
               </Popconfirm>
-              {accountDeleteError == "" || <Alert message={accountDeleteError} type="error" />}
+              {accountDeleteError == "" || (
+                <Alert message={accountDeleteError} type="error" />
+              )}
               <Button onClick={() => setTour(true)}>Start tour</Button>
             </>
           ) : (
             <>
-              <p>You are not logged in</p>
+              <Typography>You are not logged in</Typography>
               <Button
                 onClick={() => {
                   setShowLogin(true);
@@ -267,24 +279,24 @@ export default function Index() {
             </>
           )}
 
-          <h1>Feature suggestion</h1>
-          <p>
-            If you have a suggestion, or want to report a bug, suggest on this
-            Google form:
-          </p>
-          <Button
-            type="link"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdf3skJgzlf5EsvwZKdZMshuk8jQPnk9tsFSfzu87Mg6vpkRQ/viewform?usp=sf_link"
-          >
-            Open Google Form
-          </Button>
-          <p>
-            You can also suggest new features under the art post in Zen's
-            Discord (if you're there)
-          </p>
-          <Button onClick={() => setAbout(true)}>
-            About Astolph0/place
-          </Button>
+          <Typography>
+            <Typography.Title>Feature suggestion</Typography.Title>
+            <Typography.Paragraph>
+              If you have a suggestion, or want to report a bug, suggest on this
+              Google form:
+            </Typography.Paragraph>
+            <Button
+              type="link"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdf3skJgzlf5EsvwZKdZMshuk8jQPnk9tsFSfzu87Mg6vpkRQ/viewform?usp=sf_link"
+            >
+              Open Google Form
+            </Button>
+            <Typography.Paragraph>
+              You can also suggest new features under the art post in Zen's
+              Discord (if you're there)
+            </Typography.Paragraph>
+          </Typography>
+          <Button onClick={() => setAbout(true)}>About Astolph0/place</Button>
         </Space>
       </Drawer>
 
@@ -305,6 +317,7 @@ export default function Index() {
           left: "2px",
           bottom: "2px",
           fontSize: "12px",
+          color: 'white'
         }}
       >
         Astolph0/place 1.1-{data.commitSha}

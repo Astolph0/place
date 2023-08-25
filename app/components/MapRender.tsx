@@ -131,7 +131,7 @@ export default function MapRender(props: {
     if (ctx) {
       // render the map
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < props.map.length; i++) {
@@ -146,7 +146,7 @@ export default function MapRender(props: {
           if (row[j].colour === "c") ctx.fillStyle = "#00ffff";
           if (row[j].colour === "o") ctx.fillStyle = "#ff8800";
           if (row[j].colour === "w") ctx.fillStyle = "#ffffff";
-          if (row[j].colour === "0") ctx.fillStyle = "#000000";
+          if (row[j].colour === "0") ctx.fillStyle = "#111111";
           ctx.fillRect(j * zoom + moveX, i * zoom + moveY, zoom, zoom);
         }
       }

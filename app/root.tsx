@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { ConfigProvider, theme } from "antd";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -23,7 +24,11 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <ConfigProvider theme={{
+          algorithm: [theme.darkAlgorithm]
+        }}>
+          <Outlet />
+        </ConfigProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
