@@ -9,6 +9,7 @@ import { Alert, Button, Drawer, Popconfirm, Space, Typography } from "antd";
 import { useLoaderData } from "@remix-run/react";
 import Tour from "~/components/Tour";
 import About from "~/components/About";
+import PasswordChange from "~/components/PasswordChange";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -43,6 +44,8 @@ export default function Index() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [loggedInUsername, setLoggedInUsername] = React.useState("");
 
+  const [passwordChange, setPasswordChange] = React.useState(false);
+
   const [accountDeleteConfirm, setAccountDeleteConfirm] = React.useState(false);
   const [accountDeleteError, setAccountDeleteError] = React.useState("");
 
@@ -50,7 +53,7 @@ export default function Index() {
 
   const [tour, setTour] = React.useState(false);
 
-  const [version, setVersion] = React.useState('');
+  const [version, setVersion] = React.useState("");
 
   const menuButtonRef = useRef(null);
   const logoutButtonRef = useRef(null);
@@ -154,9 +157,11 @@ export default function Index() {
       refreshUser();
     }
 
-    fetch('/api/versioninfo').then(x => x.json()).then(x => {
-      setVersion(x.commitSha);
-    })
+    fetch("/api/versioninfo")
+      .then((x) => x.json())
+      .then((x) => {
+        setVersion(x.commitSha);
+      });
 
     const updating = setInterval(refreshMap, 30000);
     return () => clearInterval(updating);
@@ -199,6 +204,15 @@ export default function Index() {
           setShowUserActions(true);
         }}
       />
+
+      <PasswordChange
+        visible={passwordChange}
+        close={() => {
+          setPasswordChange(false);
+          setShowUserActions(true);
+        }}
+      />
+
       <Button
         ref={menuButtonRef}
         style={{
@@ -221,7 +235,9 @@ export default function Index() {
       </Button>
       <Drawer open={showUserActions} onClose={() => setShowUserActions(false)}>
         <Space direction="vertical">
-          <Typography><Typography.Title>Profile information</Typography.Title></Typography>
+          <Typography>
+            <Typography.Title>Profile information</Typography.Title>
+          </Typography>
           {loggedIn ? (
             <>
               <Typography>
@@ -240,6 +256,14 @@ export default function Index() {
                   Log out all devices
                 </Button>
               </Popconfirm>
+              <Button
+                onClick={() => {
+                  setPasswordChange(true);
+                  setShowUserActions(false);
+                }}
+              >
+                Change account password
+              </Button>
               <Popconfirm
                 title="Really delete account?"
                 open={accountDeleteConfirm}
@@ -315,10 +339,10 @@ export default function Index() {
           left: "2px",
           bottom: "2px",
           fontSize: "12px",
-          color: 'white'
+          color: "white",
         }}
       >
-        Astolph0/place 1.1{version == '' || `-${version}`}
+        Astolph0/place 1.1{version == "" || `-${version}`}
       </div>
     </div>
   );

@@ -13,7 +13,10 @@ export default function Login(props: {
 
   const login = () => {
     setLoading(true);
-    fetch(`/api/login?username=${username}&password=${password}`)
+    fetch('/api/login', {
+      method: "POST",
+      body: JSON.stringify({ username, password })
+    })
       .then((x) => x.json())
       .then((x) => {
         setLoading(false);

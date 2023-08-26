@@ -8,6 +8,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@ant-design/happy-work-theme": "^1.0.0",
     "@ant-design/icons": "^5.2.5",
     "@remix-run/css-bundle": "^1.19.3",
     "@remix-run/node": "^1.19.3",

@@ -20,7 +20,13 @@ export default function Register(props: {
 
   const login = () => {
     setLoading(true);
-    fetch(`/api/register?username=${username}&password=${password}`)
+    fetch(`/api/register`, {
+      method: 'POST',
+      body: JSON.stringify({
+        username,
+        password
+      })
+    })
       .then((x) => x.json())
       .then((x) => {
         setLoading(false);
@@ -31,12 +37,11 @@ export default function Register(props: {
           setPassword("");
           setError("");
           localStorage.setItem("token", x.token);
+          props.close();
           if (tour) {
             props.logInStartTour();
-            props.close();
           } else {
             props.logIn();
-            props.close();
           }
         }
       });

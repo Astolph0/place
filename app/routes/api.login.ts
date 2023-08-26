@@ -1,8 +1,8 @@
-import type {LoaderFunction} from "@remix-run/node";
+import type {ActionFunction} from "@remix-run/node";
 
-export const loader: LoaderFunction = async ({request}) => {
-  const data = new URL(request.url).searchParams;
-  if (!data.has('username') || !data.has('password')) {
+export const action: ActionFunction = async ({request}) => {
+  const data = await request.json();
+  if (!data.username || !data.password) {
     return new Response(JSON.stringify({
       error: "Bad parameters"
     }), {
@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({request}) => {
   let userIndex = 0
 
   for (let i = 0; i < users.length; i++) {
-    if (users[i].username.toLowerCase() === data.get('username')!.toLowerCase() && users[i].password === data.get('password')) {
+    if (users[i].username.toLowerCase() === data.username.toLowerCase() && users[i].password === data.password) {
       verifySuccess = true;
       user = users[i];
       userIndex = i;

@@ -1,10 +1,10 @@
-import {LoaderFunction} from "@remix-run/node";
+import {ActionFunction} from "@remix-run/node";
 
 //register endpoint
-export const loader: LoaderFunction = async ({ request }) => {
-  const searchParams = new URL(request.url).searchParams;
-  const username = searchParams.get('username');
-  const password = searchParams.get('password');
+export const action: ActionFunction = async ({ request }) => {
+  const body = await request.json();
+  const username = body.username;
+  const password = body.password;
   if (!username || !password) {
     return new Response(JSON.stringify({
       error: 'Missing username or password'

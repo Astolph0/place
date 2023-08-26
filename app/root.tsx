@@ -1,3 +1,4 @@
+import { HappyProvider } from "@ant-design/happy-work-theme";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import {
@@ -27,7 +28,9 @@ export default function App() {
         <ConfigProvider theme={{
           algorithm: [theme.darkAlgorithm]
         }}>
-          <Outlet />
+          <HappyProvider>
+            <Outlet />
+          </HappyProvider>
         </ConfigProvider>
         <ScrollRestoration />
         <Scripts />
