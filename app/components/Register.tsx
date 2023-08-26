@@ -33,6 +33,7 @@ export default function Register(props: {
           localStorage.setItem("token", x.token);
           if (tour) {
             props.logInStartTour();
+            props.close();
           } else {
             props.logIn();
             props.close();

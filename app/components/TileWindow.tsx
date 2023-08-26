@@ -8,7 +8,6 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
   const [loading, setLoading] = React.useState(false)
   const [loggedIn, setLoggedIn] = React.useState(false)
   const [tab, setTab] = React.useState('1')
-  const [showColourPreview, setShowColourPreview] = React.useState(false)
 
   useEffect(() => {
     if (!loggedIn && localStorage.getItem('token'))
@@ -33,12 +32,11 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
     green = parseInt(colour.substring(3, 5), 16)
     blue = parseInt(colour.substring(5, 7), 16)
     console.log('red: ' + red + ' green: ' + green + ' blue: ' + blue, 'total: ' + (red + green + blue))
-    if (!showColourPreview)
-      setShowColourPreview(true)
   }
   else {
-    if (showColourPreview)  
-      setShowColourPreview(false)
+    red = 255
+    green = 255
+    blue = 255
     if (colour == 'b') colour = 'Blue'
     if (colour == 'r') colour = 'Red'
     if (colour == 'g') colour = 'Green'
@@ -134,7 +132,7 @@ export default function TileWindow(props: { x: number, y: number, map: {colour: 
                     You then select the new colour and apply it using OK.
                   </Typography.Paragraph>
                 </Typography>
-                <ColorPicker size="large" value={newColour} onChange={x => setNewColour(x.toHex())} />
+                <ColorPicker size="large" disabledAlpha value={newColour} onChange={x => setNewColour(x.toHex())} />
                 {error === '' || <Alert message={error} type="error" />}
               </>}
               {loggedIn || <>
