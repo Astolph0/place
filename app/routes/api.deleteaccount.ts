@@ -13,18 +13,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   let verifySuccess = false;
   let index = 0;
-  let user = {} as {
-    username: string;
-    password: string;
-    tokens: string[];
-    nextPlaceDate: string;
-  };
   for (let i in users) {
     if (!users[i].tokens) users[i].tokens = [];
     if (users[i].tokens.includes(token)) {
       verifySuccess = true;
       index = parseInt(i);
-      user = users[i];
       break;
     }
   }
@@ -40,8 +33,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     );
   }
 
-  await fetch(`${process.env.FIREBASE}/users/${index}.json`, {
-    method: "DELETE",
+  users.splice(index, 1);
+  await fetch(`${process.env.FIREBASE}/users.json`, {
+    method: "PUT",
+    body: JSON.stringify(users),
   });
 
   return new Response(
