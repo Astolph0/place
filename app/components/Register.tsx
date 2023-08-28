@@ -5,7 +5,6 @@ export default function Register(props: {
   visible: boolean;
   close: () => void;
   logIn: () => void;
-  logInStartTour: () => void;
 }) {
   const [username, setUsername] = useState("");
   const [usernameStartedEntering, setUsernameStartedEntering] = useState(false);
@@ -15,7 +14,6 @@ export default function Register(props: {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [tour, setTour] = useState(true);
   const timeoutRef = useRef(setTimeout(() => {}, 0));
 
   const login = () => {
@@ -38,11 +36,7 @@ export default function Register(props: {
           setError("");
           localStorage.setItem("token", x.token);
           props.close();
-          if (tour) {
-            props.logInStartTour();
-          } else {
-            props.logIn();
-          }
+          props.logIn();
         }
       });
   };
@@ -112,13 +106,6 @@ export default function Register(props: {
           value={password}
           onChange={(x) => setPassword(x.currentTarget.value)}
         />
-        <Space direction="horizontal">
-          <Switch checked={tour} onChange={(x) => setTour(x)} />
-          <span>Take a tour through the app</span>
-        </Space>
-        {tour || (
-          <Alert message="You can always take the tour later from the sidebar menu" />
-        )}
         {error == "" || <Alert message={error} type="error" />}
       </Space>
     </Modal>

@@ -1,4 +1,4 @@
-import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/node";
 import MapRender from "~/components/MapRender";
 import React, { useEffect, useRef } from "react";
 import MapLoading from "~/components/MapLoading";
@@ -6,8 +6,6 @@ import TileWindow from "~/components/TileWindow";
 import Login from "~/components/Login";
 import Register from "~/components/Register";
 import { Alert, Button, Drawer, Popconfirm, Space, Typography } from "antd";
-import { useLoaderData } from "@remix-run/react";
-import Tour from "~/components/Tour";
 import About from "~/components/About";
 import PasswordChange from "~/components/PasswordChange";
 
@@ -50,8 +48,6 @@ export default function Index() {
   const [accountDeleteError, setAccountDeleteError] = React.useState("");
 
   const [about, setAbout] = React.useState(false);
-
-  const [tour, setTour] = React.useState(false);
 
   const [version, setVersion] = React.useState("");
 
@@ -195,10 +191,6 @@ export default function Index() {
       <Register
         visible={showRegister}
         logIn={refreshUser}
-        logInStartTour={() => {
-          refreshUser();
-          setTour(true);
-        }}
         close={() => {
           setShowRegister(false);
           setShowUserActions(true);
@@ -277,7 +269,6 @@ export default function Index() {
               {accountDeleteError == "" || (
                 <Alert message={accountDeleteError} type="error" />
               )}
-              <Button onClick={() => setTour(true)}>Start tour</Button>
             </>
           ) : (
             <>
@@ -323,15 +314,6 @@ export default function Index() {
       </Drawer>
 
       <About open={about} onClose={() => setAbout(false)} />
-
-      <Tour
-        start={tour}
-        menuButton={menuButtonRef}
-        exit={() => setTour(false)}
-        sidebarOpen={showUserActions}
-        openSidebar={() => setShowUserActions(true)}
-        closeSidebar={() => setShowUserActions(false)}
-      />
 
       <div
         style={{
