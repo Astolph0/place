@@ -173,7 +173,7 @@ export default function TileWindow(props: {
                       <Space wrap>
                         <Button style={{backgroundColor: 'red'}} onClick={() => setNewColour('ff0000')} />
                         <Button style={{backgroundColor: 'green'}} onClick={() => setNewColour('00ff00')} />
-                        <Button style={{backgroundColor: 'blue'}} onClick={() => setNewColour('ffff00')} />
+                        <Button style={{backgroundColor: 'blue'}} onClick={() => setNewColour('0000ff')} />
                         <Button style={{backgroundColor: 'yellow'}} onClick={() => setNewColour('ffff00')} />
                         <Button style={{backgroundColor: '#ffa9ff'}} onClick={() => setNewColour('FFA9FF')} />
                         <Button style={{backgroundColor: 'cyan'}} onClick={() => setNewColour('00ffff')} />
