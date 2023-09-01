@@ -1,4 +1,4 @@
-import { ConfigProvider, Spin, Typography } from "antd";
+import { Spin } from "antd";
 
 export default function MapLoading() {
   return <div style={{
