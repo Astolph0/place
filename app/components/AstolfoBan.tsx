@@ -24,30 +24,20 @@ export default function AstolfoBan() {
 
   const copyNewNick1 = () => {
     setNewNick1Copied(true);
-    // copy "#UnbanProgrammerAstolfo" to clipboard
     navigator.clipboard.writeText("#UnbanProgrammerAstolfo");
     setTimeout(() => setNewNick1Copied(false), 1000);
   };
 
   const copyNewNick2 = () => {
     setNewNick2Copied(true);
-    // copy "#UnbanAstolfo" to clipboard
-    navigator.clipboard.writeText("#UnbanAstolfo");
+    navigator.clipboard.writeText("#Unban\"astolf0.\"");
     setTimeout(() => setNewNick2Copied(false), 1000);
   };
 
   const copyNewNick3 = () => {
     setNewNick3Copied(true);
-    // copy "#UnbanAstolf0" to clipboard
-    navigator.clipboard.writeText("#UnbanAstolf0");
-    setTimeout(() => setNewNick3Copied(false), 1000);
-  };
-
-  const copyNewNick4 = () => {
-    setNewNick4Copied(true);
-    // copy "#BringBackProgrammerAstolfo" to clipboard
     navigator.clipboard.writeText("#BringBackProgrammerAstolfo");
-    setTimeout(() => setNewNick4Copied(false), 1000);
+    setTimeout(() => setNewNick3Copied(false), 1000);
   };
 
   const close = () => {
@@ -104,7 +94,7 @@ export default function AstolfoBan() {
         />
         <Input
           readOnly
-          value="#UnbanAstolfo"
+          value='#Unban"astolf0."'
           addonAfter={
             newNick2Copied ? (
               <CheckOutlined />
@@ -115,23 +105,12 @@ export default function AstolfoBan() {
         />
         <Input
           readOnly
-          value="#UnbanAstolf0"
+          value="#BringBackProgrammerAstolfo"
           addonAfter={
             newNick3Copied ? (
               <CheckOutlined />
             ) : (
               <CopyOutlined onClick={copyNewNick3} />
-            )
-          }
-        />
-        <Input
-          readOnly
-          value="#BringBackProgrammerAstolfo"
-          addonAfter={
-            newNick4Copied ? (
-              <CheckOutlined />
-            ) : (
-              <CopyOutlined onClick={copyNewNick4} />
             )
           }
         />
