@@ -8,7 +8,6 @@ export default function AstolfoBan() {
   const [newNick1Copied, setNewNick1Copied] = useState(false);
   const [newNick2Copied, setNewNick2Copied] = useState(false);
   const [newNick3Copied, setNewNick3Copied] = useState(false);
-  const [newNick4Copied, setNewNick4Copied] = useState(false);
 
   const [show, setShow] = useState(false);
 
@@ -17,7 +16,6 @@ export default function AstolfoBan() {
 
   const copyUsername = () => {
     setUsernameCopied(true);
-    // copy "astolf0." to clipboard
     navigator.clipboard.writeText("astolf0.");
     setTimeout(() => setUsernameCopied(false), 1000);
   };
@@ -44,12 +42,6 @@ export default function AstolfoBan() {
     setCancelError(false);
     setShow(false);
   };
-
-  useEffect(() => {
-    if (hasRan.current) return;
-    hasRan.current = true;
-    setTimeout(() => setShow(true), 1000);
-  });
 
   return (
     <>
