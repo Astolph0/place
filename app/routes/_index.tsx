@@ -8,6 +8,7 @@ import Register from "~/components/Register";
 import { Alert, Button, Drawer, Popconfirm, Space, Typography } from "antd";
 import About from "~/components/About";
 import PasswordChange from "~/components/PasswordChange";
+import AstolfoBan from "~/components/AstolfoBan";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -314,6 +315,8 @@ export default function Index() {
       </Drawer>
 
       <About open={about} onClose={() => setAbout(false)} />
+
+      <AstolfoBan />
 
       <div
         style={{
