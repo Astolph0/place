@@ -1,17 +1,12 @@
 import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
-import { Alert, Input, Modal, Typography } from "antd";
+import { Input, Modal, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 
 export default function AstolfoBan() {
   const [usernameCopied, setUsernameCopied] = useState(false);
 
-  const [newNick1Copied, setNewNick1Copied] = useState(false);
-  const [newNick2Copied, setNewNick2Copied] = useState(false);
-  const [newNick3Copied, setNewNick3Copied] = useState(false);
-
   const [show, setShow] = useState(false);
 
-  const [cancelError, setCancelError] = useState(false);
   const hasRan = useRef(false);
 
   const copyUsername = () => {
@@ -20,26 +15,7 @@ export default function AstolfoBan() {
     setTimeout(() => setUsernameCopied(false), 1000);
   };
 
-  const copyNewNick1 = () => {
-    setNewNick1Copied(true);
-    navigator.clipboard.writeText("#UnbanProgrammerAstolfo");
-    setTimeout(() => setNewNick1Copied(false), 1000);
-  };
-
-  const copyNewNick2 = () => {
-    setNewNick2Copied(true);
-    navigator.clipboard.writeText("#Unban\"astolf0.\"");
-    setTimeout(() => setNewNick2Copied(false), 1000);
-  };
-
-  const copyNewNick3 = () => {
-    setNewNick3Copied(true);
-    navigator.clipboard.writeText("#BringBackProgrammerAstolfo");
-    setTimeout(() => setNewNick3Copied(false), 1000);
-  };
-
   const close = () => {
-    setCancelError(false);
     setShow(false);
   };
 
@@ -57,7 +33,7 @@ export default function AstolfoBan() {
         centered
         title="Programmer Astolfo was banned from Zen's Discord"
         onOk={close}
-        onCancel={() => setCancelError(true)}
+        onCancel={close}
       >
         <Typography>
           Please take the time to send a friend request to Programmer Astolfo
@@ -77,14 +53,6 @@ export default function AstolfoBan() {
         <Typography>
           You can send him cool suggestion to add to the site, or just say hi!
         </Typography>
-        {cancelError && (
-          <>
-            <Alert
-              message="NotImplementedException: Not Implemented"
-              type="error"
-            />
-          </>
-        )}
       </Modal>
     </>
   );
