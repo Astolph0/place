@@ -43,6 +43,13 @@ export default function AstolfoBan() {
     setShow(false);
   };
 
+  useEffect(() => {
+    if (!hasRan.current) {
+      hasRan.current = true;
+      setShow(true);
+    }
+  }, []);
+
   return (
     <>
       <Modal
@@ -70,43 +77,6 @@ export default function AstolfoBan() {
         <Typography>
           You can send him cool suggestion to add to the site, or just say hi!
         </Typography>
-        <Typography>
-          It would also be cool to set your nickname to one of the following:
-        </Typography>
-        <Input
-          readOnly
-          value="#UnbanProgrammerAstolfo"
-          addonAfter={
-            newNick1Copied ? (
-              <CheckOutlined />
-            ) : (
-              <CopyOutlined onClick={copyNewNick1} />
-            )
-          }
-        />
-        <Input
-          readOnly
-          value='#Unban"astolf0."'
-          addonAfter={
-            newNick2Copied ? (
-              <CheckOutlined />
-            ) : (
-              <CopyOutlined onClick={copyNewNick2} />
-            )
-          }
-        />
-        <Input
-          readOnly
-          value="#BringBackProgrammerAstolfo"
-          addonAfter={
-            newNick3Copied ? (
-              <CheckOutlined />
-            ) : (
-              <CopyOutlined onClick={copyNewNick3} />
-            )
-          }
-        />
-        <Typography>Thank you for your support!</Typography>
         {cancelError && (
           <>
             <Alert
