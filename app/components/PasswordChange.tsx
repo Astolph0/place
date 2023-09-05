@@ -1,9 +1,8 @@
-import { Input, Modal, Typography } from "antd";
-import { useState } from "react";
+import {Input, Modal, Typography} from "antd";
+import {useState} from "react";
 
 export default function PasswordChange(props: {
-  visible: boolean;
-  close: () => void;
+  visible: boolean; close: () => void;
 }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,11 +11,9 @@ export default function PasswordChange(props: {
   const changePassword = () => {
     setLoading(true);
     fetch('/api/changepassword', {
-      method: 'POST',
-      headers: {
+      method: 'POST', headers: {
         Authorization: localStorage.getItem('token') ?? ''
-      },
-      body: JSON.stringify({
+      }, body: JSON.stringify({
         password
       })
     }).then(x => {
@@ -24,8 +21,7 @@ export default function PasswordChange(props: {
         setLoading(false);
         setPassword('');
         props.close();
-      }
-      else {
+      } else {
         x.text().then(x => {
           setError(x);
         })
@@ -33,15 +29,15 @@ export default function PasswordChange(props: {
     })
   };
 
-  return (
-    <>
-      <Modal open={props.visible} onCancel={props.close} onOk={changePassword} confirmLoading={loading} title='Change Password'>
+  return (<>
+      <Modal open={props.visible} onCancel={props.close} onOk={changePassword} confirmLoading={loading}
+             title='Change Password'>
         <Typography.Text>Enter your new password below:</Typography.Text>
         <Input.Password
           value={password}
           onChange={(x) => setPassword(x.target.value)}
         />
+        {error == "" || <Typography.Text type='danger'>{error}</Typography.Text>}
       </Modal>
-    </>
-  );
+    </>);
 }

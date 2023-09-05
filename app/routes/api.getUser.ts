@@ -1,15 +1,13 @@
 import type {LoaderFunction} from "@remix-run/node";
-import { Response} from "@remix-run/node";
+import {Response} from "@remix-run/node";
 
 
 // api endpoint to get a user
 // parameters: token in header
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({request}) => {
   const token = request.headers.get('Authorization') ?? ''
   const users = await (await fetch(`${process.env.FIREBASE}/users.json`)).json() as {
-    username: string,
-    password: string,
-    tokens: string[]
+    username: string, password: string, tokens: string[]
   }[]
 
   let user
@@ -29,8 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     return new Response(JSON.stringify({
       username: user!.username
     }))
-  }
-  else {
+  } else {
     return new Response(JSON.stringify({
       error: 'Invalid token'
     }))

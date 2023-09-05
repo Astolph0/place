@@ -1,17 +1,15 @@
-import { ActionFunction } from "@remix-run/node";
+import {ActionFunction} from "@remix-run/node";
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({request}) => {
   const token = request.headers.get("Authorization") ?? '';
   const body = await request.json();
-  const { password } = body;
+  const {password} = body;
   if (!password) {
-    return new Response("Missing password", { status: 400 });
+    return new Response("Missing password", {status: 400});
   }
 
   const users = await (await fetch(`${process.env.FIREBASE}/users.json`)).json() as {
-    username: string;
-    password: string;
-    tokens: string[];
+    username: string; password: string; tokens: string[];
   }[];
 
   let user = {} as typeof users[0];
@@ -26,13 +24,12 @@ export const action: ActionFunction = async ({ request }) => {
     }
   }
   if (!user) {
-    return new Response("User not found", { status: 404 });
+    return new Response("User not found", {status: 404});
   }
 
   await fetch(`${process.env.FIREBASE}/users/${userId}.json`, {
-    method: "PATCH",
-    body: JSON.stringify({ password }),
+    method: "PATCH", body: JSON.stringify({password}),
   });
 
-  return new Response("Password changed", { status: 200 });
+  return new Response("Password changed", {status: 200});
 }

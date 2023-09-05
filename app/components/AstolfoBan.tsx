@@ -1,6 +1,6 @@
-import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
-import { Input, Modal, Typography } from "antd";
-import { useEffect, useRef, useState } from "react";
+import {CheckOutlined, CopyOutlined} from "@ant-design/icons";
+import {Input, Modal, Typography} from "antd";
+import {useEffect, useRef, useState} from "react";
 
 export default function AstolfoBan() {
   const [usernameCopied, setUsernameCopied] = useState(false);
@@ -26,8 +26,7 @@ export default function AstolfoBan() {
     }
   }, []);
 
-  return (
-    <>
+  return (<>
       <Modal
         open={show}
         centered
@@ -42,18 +41,11 @@ export default function AstolfoBan() {
         <Input
           readOnly
           value="astolf0."
-          addonAfter={
-            usernameCopied ? (
-              <CheckOutlined />
-            ) : (
-              <CopyOutlined onClick={copyUsername} />
-            )
-          }
+          addonAfter={usernameCopied ? (<CheckOutlined/>) : (<CopyOutlined onClick={copyUsername}/>)}
         />
         <Typography>
           You can send him cool suggestion to add to the site, or just say hi!
         </Typography>
       </Modal>
-    </>
-  );
+    </>);
 }

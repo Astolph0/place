@@ -1,8 +1,7 @@
-import { PointerEvent, useEffect, useRef, useState } from "react";
+import {PointerEvent, useEffect, useRef, useState} from "react";
 
 export default function MapRender(props: {
-  map: { colour: string; user: string }[][];
-  onTileSelect?: (x: number, y: number) => void;
+  map: { colour: string; user: string }[][]; onTileSelect?: (x: number, y: number) => void;
 }) {
   const canvasRef = useRef() as React.MutableRefObject<HTMLCanvasElement>;
 
@@ -11,18 +10,17 @@ export default function MapRender(props: {
   const [moveY, setMoveY] = useState(0);
 
   const zoom2 = useRef(1);
-  const pos2 = useRef({ x: 0, y: 0 });
+  const pos2 = useRef({x: 0, y: 0});
   const mouseDown = useRef(false);
   const mouseMoved = useRef(false);
 
-  const screenRes = useRef({ width: 640, height: 480 });
+  const screenRes = useRef({width: 640, height: 480});
   const [screenWidth, setScreenWidth] = useState(640);
   const [screenHeight, setScreenHeight] = useState(480);
 
   const resizeHandle = () => {
     screenRes.current = {
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: window.innerWidth, height: window.innerHeight,
     };
     setScreenWidth(screenRes.current.width);
     setScreenHeight(screenRes.current.height);
@@ -37,11 +35,10 @@ export default function MapRender(props: {
     const scaleFactor = zoom2.current / previousZoom;
 
     if (zoom !== zoom2.current) {
-      const pos = { ...pos2.current };
+      const pos = {...pos2.current};
 
       // Calculate cursor position relative to the container
-      const cursorX =
-        e.clientX - canvasRef.current.getBoundingClientRect().left;
+      const cursorX = e.clientX - canvasRef.current.getBoundingClientRect().left;
       const cursorY = e.clientY - canvasRef.current.getBoundingClientRect().top;
 
       // Calculate the position change due to zoom
@@ -101,10 +98,7 @@ export default function MapRender(props: {
       firstResize.current = false;
       resizeHandle();
 
-      zoom2.current = Math.min(
-        screenRes.current.width / 110,
-        screenRes.current.height / 110
-      );
+      zoom2.current = Math.min(screenRes.current.width / 110, screenRes.current.height / 110);
       setZoom(zoom2.current);
 
       pos2.current = {
@@ -157,21 +151,15 @@ export default function MapRender(props: {
     drawMap();
   }, [canvasRef, drawMap]);
 
-  return (
-    <canvas
+  return (<canvas
       ref={canvasRef}
       width={screenWidth}
       height={screenHeight}
       style={{
-        position: "fixed",
-        left: "0",
-        top: "0",
-        width: "100vw",
-        height: "100vh",
+        position: "fixed", left: "0", top: "0", width: "100vw", height: "100vh",
       }}
       onPointerDown={pointerDownHandle}
       onPointerMove={pointerMoveHandle}
       onPointerUp={pointerUpHandle}
-    />
-  );
+    />);
 }

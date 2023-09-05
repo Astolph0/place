@@ -1,40 +1,23 @@
-import type { V2_MetaFunction } from "@remix-run/node";
+import type {V2_MetaFunction} from "@remix-run/node";
 import MapRender from "~/components/MapRender";
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef} from "react";
 import MapLoading from "~/components/MapLoading";
 import TileWindow from "~/components/TileWindow";
 import Login from "~/components/Login";
 import Register from "~/components/Register";
-import { Alert, Button, Drawer, Popconfirm, Space, Typography } from "antd";
+import {Alert, Button, Drawer, Popconfirm, Space, Typography} from "antd";
 import About from "~/components/About";
 import PasswordChange from "~/components/PasswordChange";
 import AstolfoBan from "~/components/AstolfoBan";
 
 export const meta: V2_MetaFunction = () => {
-  return [
-    { title: "r/place clone" },
-    {
-      name: "description",
-      content: "Totally the best r/place clone, made by Astolfo himself.",
-    },
-    { name: "theme-color", content: "#ff8fff" },
-  ];
+  return [{title: "r/place clone"}, {
+    name: "description", content: "Totally the best r/place clone, made by Astolfo himself.",
+  }, {name: "theme-color", content: "#ff8fff"},];
 };
 
-const colours = ["r", "g", "b"];
-let testMap = [] as string[][]; // 10x10 map for testing
-for (let i = 0; i < 100; i++) {
-  let arr = [];
-  for (let j = 0; j < 100; j++) {
-    arr.push(colours[Math.floor(Math.random() * colours.length)]);
-  }
-  testMap.push(arr);
-}
-
 export default function Index() {
-  const [map, setMap] = React.useState(
-    [] as { colour: string; user: string }[][]
-  );
+  const [map, setMap] = React.useState([] as { colour: string; user: string }[][]);
   const [showLogin, setShowLogin] = React.useState(false);
   const [showRegister, setShowRegister] = React.useState(false);
   const [showUserActions, setShowUserActions] = React.useState(false);
@@ -64,17 +47,13 @@ export default function Index() {
   };
 
   const [tileWindow, setTileWindow] = React.useState({
-    x: 0,
-    y: 0,
-    visible: false,
+    x: 0, y: 0, visible: false,
   } as {
-    x: number;
-    y: number;
-    visible: boolean;
+    x: number; y: number; visible: boolean;
   });
 
   const tileSelected = (x: number, y: number) => {
-    setTileWindow({ x, y, visible: true });
+    setTileWindow({x, y, visible: true});
   };
 
   const refreshUser = () => {
@@ -101,7 +80,7 @@ export default function Index() {
   };
 
   const logOutAll = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       fetch("/api/logoutall", {
         headers: {
           Authorization: localStorage.getItem("token") ?? "",
@@ -118,7 +97,7 @@ export default function Index() {
   };
 
   const deleteAccount = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       fetch("/api/deleteaccount", {
         headers: {
           Authorization: localStorage.getItem("token") ?? "",
@@ -146,11 +125,7 @@ export default function Index() {
     }
     hasRan.current = true;
     refreshMap();
-    if (
-      !loggedIn &&
-      localStorage.getItem("token") !== "" &&
-      localStorage.getItem("token") !== null
-    ) {
+    if (!loggedIn && localStorage.getItem("token") !== "" && localStorage.getItem("token") !== null) {
       refreshUser();
     }
 
@@ -164,11 +139,10 @@ export default function Index() {
     return () => clearInterval(updating);
   }, [setMap, refreshMap]);
 
-  return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <div style={{ position: "sticky", left: "0", top: "0" }}>
-        {map.length == 0 && <MapLoading />}
-        {map.length == 0 || <MapRender map={map} onTileSelect={tileSelected} />}
+  return (<div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
+      <div style={{position: "sticky", left: "0", top: "0"}}>
+        {map.length == 0 && <MapLoading/>}
+        {map.length == 0 || <MapRender map={map} onTileSelect={tileSelected}/>}
       </div>
 
       <TileWindow
@@ -176,7 +150,7 @@ export default function Index() {
         y={tileWindow.y}
         map={map}
         visible={tileWindow.visible}
-        close={() => setTileWindow({ ...tileWindow, visible: false })}
+        close={() => setTileWindow({...tileWindow, visible: false})}
         updateTiles={() => refreshMap()}
       />
 
@@ -209,21 +183,15 @@ export default function Index() {
       <Button
         ref={menuButtonRef}
         style={{
-          position: "fixed",
-          top: "20px",
-          right: "20px",
+          position: "fixed", top: "20px", right: "20px",
         }}
         onClick={() => setShowUserActions(true)}
         type="primary"
       >
         User (
-        {loggedIn ? (
-          <>
+        {loggedIn ? (<>
             logged in as <b>{loggedInUsername}</b>
-          </>
-        ) : (
-          "not logged in"
-        )}
+          </>) : ("not logged in")}
         )
       </Button>
       <Drawer open={showUserActions} onClose={() => setShowUserActions(false)}>
@@ -231,8 +199,7 @@ export default function Index() {
           <Typography>
             <Typography.Title>Profile information</Typography.Title>
           </Typography>
-          {loggedIn ? (
-            <>
+          {loggedIn ? (<>
               <Typography>
                 You are currently logged in as {loggedInUsername}
               </Typography>
@@ -267,12 +234,8 @@ export default function Index() {
                   Delete account
                 </Button>
               </Popconfirm>
-              {accountDeleteError == "" || (
-                <Alert message={accountDeleteError} type="error" />
-              )}
-            </>
-          ) : (
-            <>
+              {accountDeleteError == "" || (<Alert message={accountDeleteError} type="error"/>)}
+            </>) : (<>
               <Typography>You are not logged in</Typography>
               <Button
                 onClick={() => {
@@ -290,8 +253,7 @@ export default function Index() {
               >
                 Register
               </Button>
-            </>
-          )}
+            </>)}
 
           <Typography>
             <Typography.Title>Feature suggestion</Typography.Title>
@@ -314,21 +276,16 @@ export default function Index() {
         </Space>
       </Drawer>
 
-      <About open={about} onClose={() => setAbout(false)} />
+      <About open={about} onClose={() => setAbout(false)}/>
 
-      <AstolfoBan />
+      <AstolfoBan/>
 
       <div
         style={{
-          position: "fixed",
-          left: "2px",
-          bottom: "2px",
-          fontSize: "12px",
-          color: "white",
+          position: "fixed", left: "2px", bottom: "2px", fontSize: "12px", color: "white",
         }}
       >
         Astolph0/place 1.1{version == "" || `-${version}`}
       </div>
-    </div>
-  );
+    </div>);
 }

@@ -10,8 +10,10 @@ export const action: ActionFunction = async ({request}) => {
     })
   }
 
-  const users = await (await fetch(`${process.env.FIREBASE}/users.json`)).json() as { username: string, password: string, tokens: string[] }[];
-  
+  const users = await (await fetch(`${process.env.FIREBASE}/users.json`)).json() as {
+    username: string, password: string, tokens: string[]
+  }[];
+
   let verifySuccess = false;
   let user = {
     username: '', password: '', tokens: []
@@ -41,8 +43,7 @@ export const action: ActionFunction = async ({request}) => {
   user.tokens.push(token)
   users[userIndex] = user;
   await fetch(`${process.env.FIREBASE}/users.json`, {
-    method: 'PUT',
-    body: JSON.stringify(users)
+    method: 'PUT', body: JSON.stringify(users)
   })
 
   return new Response(JSON.stringify({

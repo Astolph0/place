@@ -1,10 +1,8 @@
-import { Alert, Input, Modal, Space, Spin, Switch } from "antd";
-import { ChangeEvent, useRef, useState } from "react";
+import {Alert, Input, Modal, Space, Spin} from "antd";
+import {ChangeEvent, useRef, useState} from "react";
 
 export default function Register(props: {
-  visible: boolean;
-  close: () => void;
-  logIn: () => void;
+  visible: boolean; close: () => void; logIn: () => void;
 }) {
   const [username, setUsername] = useState("");
   const [usernameStartedEntering, setUsernameStartedEntering] = useState(false);
@@ -14,15 +12,14 @@ export default function Register(props: {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const timeoutRef = useRef(setTimeout(() => {}, 0));
+  const timeoutRef = useRef(setTimeout(() => {
+  }, 0));
 
   const login = () => {
     setLoading(true);
     fetch(`/api/register`, {
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        password
+      method: 'POST', body: JSON.stringify({
+        username, password
       })
     })
       .then((x) => x.json())
@@ -61,8 +58,7 @@ export default function Register(props: {
     timeoutRef.current = setTimeout(() => verifyUsername(x.target.value), 500);
   };
 
-  return (
-    <Modal
+  return (<Modal
       title="Register"
       open={props.visible}
       onOk={login}
@@ -71,43 +67,33 @@ export default function Register(props: {
       confirmLoading={loading}
       okText="Register"
     >
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <img src="/astolfo wave.png" width={200} />
-        <span style={{ fontStyle: "italic" }}>Hello there, and welcome to Astolph0/place! I am Astolfo, and you are~?</span>
+      <Space direction="vertical" style={{width: "100%"}}>
+        <img src="/astolfo wave.png" width={200}/>
+        <span
+          style={{fontStyle: "italic"}}>Hello there, and welcome to Astolph0/place! I am Astolfo, and you are~?</span>
         <span>Username</span>
-        <Input type="text" value={username} onChange={usernameFieldUpdate} />
+        <Input type="text" value={username} onChange={usernameFieldUpdate}/>
 
-        {usernameStartedEntering && (
-          <>
-            {usernameVerifying ? (
-              <Space direction="horizontal">
-                <Spin />
+        {usernameStartedEntering && (<>
+            {usernameVerifying ? (<Space direction="horizontal">
+                <Spin/>
                 <span>
                   Verifying if <b>{username}</b> is available...
                 </span>
-              </Space>
-            ) : (
-              <>
+              </Space>) : (<>
                 <Alert
-                  message={
-                    usernameFree
-                      ? `${username} is free!`
-                      : `${username} cannot be used: ${usernameError}`
-                  }
+                  message={usernameFree ? `${username} is free!` : `${username} cannot be used: ${usernameError}`}
                   type={usernameFree ? "success" : "error"}
                 />
-              </>
-            )}
-          </>
-        )}
+              </>)}
+          </>)}
         <span>Password</span>
         <Input
           type="password"
           value={password}
           onChange={(x) => setPassword(x.currentTarget.value)}
         />
-        {error == "" || <Alert message={error} type="error" />}
+        {error == "" || <Alert message={error} type="error"/>}
       </Space>
-    </Modal>
-  );
+    </Modal>);
 }

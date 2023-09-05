@@ -1,10 +1,8 @@
-import { Alert, Input, Modal, Space } from "antd";
-import { useState } from "react";
+import {Alert, Input, Modal, Space} from "antd";
+import {useState} from "react";
 
 export default function Login(props: {
-  visible: boolean;
-  close: () => void;
-  logIn: () => void;
+  visible: boolean; close: () => void; logIn: () => void;
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,8 +12,7 @@ export default function Login(props: {
   const login = () => {
     setLoading(true);
     fetch('/api/login', {
-      method: "POST",
-      body: JSON.stringify({ username, password })
+      method: "POST", body: JSON.stringify({username, password})
     })
       .then((x) => x.json())
       .then((x) => {
@@ -33,8 +30,7 @@ export default function Login(props: {
       });
   };
 
-  return (
-    <Modal
+  return (<Modal
       title="Log in"
       open={props.visible}
       onOk={login}
@@ -42,9 +38,10 @@ export default function Login(props: {
       confirmLoading={loading}
       okText="Log in"
     >
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <img src="/astolfo wave.png" width={200} />
-        <span style={{ fontStyle: "italic" }}>Hello there, and welcome back to Astolph0/place! Nice to meet you again :3</span>
+      <Space direction="vertical" style={{width: "100%"}}>
+        <img src="/astolfo wave.png" width={200}/>
+        <span
+          style={{fontStyle: "italic"}}>Hello there, and welcome back to Astolph0/place! Nice to meet you again :3</span>
         <span>Username</span>
         <Input
           type="text"
@@ -57,8 +54,7 @@ export default function Login(props: {
           value={password}
           onChange={(x) => setPassword(x.currentTarget.value)}
         />
-        {error == "" || <Alert message={error} type="error" />}
+        {error == "" || <Alert message={error} type="error"/>}
       </Space>
-    </Modal>
-  );
+    </Modal>);
 }

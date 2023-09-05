@@ -13,14 +13,11 @@ export const action: ActionFunction = async ({request}) => {
     })
   }
   const users = await (await fetch(`${process.env.FIREBASE}/users.json`)).json() as {
-    username: string,
-    password: string,
-    tokens: string[],
-    nextPlaceDate: string
+    username: string, password: string, tokens: string[], nextPlaceDate: string
   }[];
   let token = request.headers.get("Authorization");
   let verifySuccess = false;
-  let user = {} as {username: string, password: string, tokens: string[], nextPlaceDate: string};
+  let user = {} as { username: string, password: string, tokens: string[], nextPlaceDate: string };
   for (let i of users) {
     if (!i.tokens) i.tokens = [];
     if (!i.nextPlaceDate) i.nextPlaceDate = new Date().toISOString();
@@ -50,18 +47,15 @@ export const action: ActionFunction = async ({request}) => {
   }
 
   await fetch(`${process.env.FIREBASE}/grid/${body.y}/${body.x}.json`, {
-    method: "PUT",
-    body: JSON.stringify({
-      colour: body.colour,
-      user: user.username
+    method: "PUT", body: JSON.stringify({
+      colour: body.colour, user: user.username
     })
   })
 
   if (user.username !== 'system' && user.username !== 'astolfo') {
     console.log('apply cooldown for user', user.username)
     await fetch(`${process.env.FIREBASE}/users/${users.indexOf(user)}/nextPlaceDate.json`, {
-      method: "PUT",
-      body: JSON.stringify(new Date(Date.now() + 1000 * 60 * 5).toISOString())
+      method: "PUT", body: JSON.stringify(new Date(Date.now() + 1000 * 60 * 5).toISOString())
     })
   }
 

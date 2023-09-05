@@ -1,13 +1,9 @@
-import { LoaderFunction } from "@remix-run/node";
+import {LoaderFunction} from "@remix-run/node";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({request}) => {
   const token = request.headers.get("Authorization") || "";
-  const users = (await (
-    await fetch(`${process.env.FIREBASE}/users.json`)
-  ).json()) as {
-    username: string;
-    password: string;
-    tokens: string[];
+  const users = (await (await fetch(`${process.env.FIREBASE}/users.json`)).json()) as {
+    username: string; password: string; tokens: string[];
   }[];
 
   let verifySuccess = false;
@@ -23,26 +19,19 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   if (!verifySuccess) {
-    return new Response(
-      JSON.stringify({
-        error: "Invalid token",
-      }),
-      {
-        status: 401,
-      }
-    );
+    return new Response(JSON.stringify({
+      error: "Invalid token",
+    }), {
+      status: 401,
+    });
   }
 
   user.tokens = [];
   await fetch(`${process.env.FIREBASE}/users/${userIndex}.json`, {
-    method: "PUT",
-    body: JSON.stringify(user),
+    method: "PUT", body: JSON.stringify(user),
   });
 
-  return new Response(
-    JSON.stringify({
-      message: "Logged out successfully",
-    }),
-    { status: 200 }
-  );
+  return new Response(JSON.stringify({
+    message: "Logged out successfully",
+  }), {status: 200});
 };
