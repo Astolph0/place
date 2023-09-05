@@ -9,6 +9,7 @@ import {Alert, Button, Drawer, Popconfirm, Space, Typography} from "antd";
 import About from "~/components/About";
 import PasswordChange from "~/components/PasswordChange";
 import AstolfoBan from "~/components/AstolfoBan";
+import UpdateInformation from "~/components/UpdateInformation";
 
 export const meta: V2_MetaFunction = () => {
   return [{title: "r/place clone"}, {
@@ -280,12 +281,14 @@ export default function Index() {
 
       <AstolfoBan/>
 
+      <UpdateInformation />
+
       <div
         style={{
           position: "fixed", left: "2px", bottom: "2px", fontSize: "12px", color: "white",
         }}
       >
-        Astolph0/place 1.1{version == "" || `-${version}`}
+        Astolph0/place 1.2{version == "" || `-${version}`}
       </div>
     </div>);
 }
