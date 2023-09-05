@@ -27,7 +27,7 @@ export default function UpdateInformation() {
   return (
     <Modal title="Update" open={visible} onOk={() => setVisible(false)} onCancel={() => setVisible(false)}>
       <Typography.Title>New in {currentVersionString}</Typography.Title>
-      <Typography.Paragraph>&bull; Fixed "Programmer Astolfo" banned dialog.</Typography.Paragraph>
+      <Typography.Paragraph>&bull; Fixed "Programmer Astolfo banned" dialog.</Typography.Paragraph>
       <Typography.Paragraph>&bull; Added Password Changing</Typography.Paragraph>
       <Typography.Paragraph>&bull; First time load greatly improved.</Typography.Paragraph>
     </Modal>

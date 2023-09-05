@@ -279,9 +279,9 @@ export default function Index() {
 
       <About open={about} onClose={() => setAbout(false)}/>
 
+    <UpdateInformation />
       <AstolfoBan/>
 
-      <UpdateInformation />
 
       <div
         style={{
